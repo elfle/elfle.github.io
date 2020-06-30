@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sendbee frontapp test</title>
+<!--    <script type="text/javascript" src="//dl.frontapp.com/libs/plugin-sdk-1.0.1.min.js"></script>-->
+    <script type="text/javascript" src="js/frontapp-1.1.0.js"></script>
+</head>
+<body>
+<h3>Test implementation</h3>
+
+<button type="button" id="create-draft">Create Draft</button>
+
+
+
+<script type="text/javascript">
+    // window.Front is now available.
+    Front = window.Front;
+
+    // test from https://dev.frontapp.com/reference/event-observables
+    Front.contextUpdates.subscribe(context => {
+        switch(context.type) {
+            case 'noConversation':
+                console.log('No conversation selected');
+                break;
+            case 'singleConversation':
+                console.log('Selected conversation:', context.conversation);
+                break;
+            case 'multiConversations':
+                console.log('Multiple conversations selected', context.conversations);
+                break;
+            default:
+                console.error(`Unsupported context type: ${context.type}`);
+                break;
+        }
+    });
+
+
+    // test creating a draft mesage
+    function create_draft()
+    {
+        // this is called on the last context we got
+        const draft = await Front.createDraft({
+            content: {
+                body: 'Hello world',
+                type: 'text'
+            },
+            replyOptions: {
+                type: 'reply', // Or 'replyAll'
+                originalMessageId: 'msg_xxx'
+            }});
+    }
+
+    const button = document.getElementById('create-draft');
+    button.addEventListener('click', () => create_draft);
+
+</script>
+</body>
+</html>
